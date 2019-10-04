@@ -6,8 +6,9 @@ type G struct {
 	Method string `yaml:"method"`
 	Route  string `yaml:"route"`
 	Resp   struct {
-		Status int    `yaml:"status"`
-		Body   string `yaml:"body"`
+		Status  int               `yaml:"status"`
+		Body    string            `yaml:"body"`
+		Headers map[string]string `yaml:"headers"`
 	} `yaml:"response"`
 }
 

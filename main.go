@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
+	"strconv"
 	"strings"
 )
 
@@ -33,7 +34,25 @@ func main() {
 	code := ""
 	code += HEAD + "\n"
 	for _, g := range gs {
-		code += strings.ReplaceAll(strings.ReplaceAll(HANDLER, "{{ROUTE}}", g.Route), "{{BODY}}", g.Resp.Body) + "\n"
+		replHandler := strings.ReplaceAll(HANDLER, "{{STATUS}}", strconv.Itoa(g.Resp.Status))
+		replHandler = strings.ReplaceAll(replHandler, "{{ROUTE}}", g.Route)
+		replHandler = strings.ReplaceAll(replHandler, "{{BODY}}", g.Resp.Body)
+		if len(g.Resp.Headers) > 0 {
+			headers := ""
+			for k, v := range g.Resp.Headers {
+				newHeader := strings.ReplaceAll(HEADER, "{{KEY}}", k)
+				newHeader = strings.ReplaceAll(newHeader, "{{VALUE}}", v)
+				headers += newHeader + "\n\t\t"
+			}
+			// Insert header lines to existing code
+			replHandler = strings.ReplaceAll(replHandler, "{{HEADERS}}", headers)
+
+		} else {
+			// Remove the {{HEADERS}} string as there are no headers
+			replHandler = strings.ReplaceAll(replHandler, "{{HEADERS}}", "")
+		}
+
+		code += replHandler + "\n"
 	}
 
 	code += TAIL

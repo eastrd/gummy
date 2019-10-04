@@ -1,16 +1,24 @@
-- route: /
-  method: POST
-  response:
-    body: |
-      line 1
-      line 2
-      line 3
+# - route: /
+#   method: POST
+#   response:
+#     body: |
+#       line 1
+#       line 2
+#       line 3
 
 - route: /heartbeat
   response:
-    status: 301
+    status: 201
     body: |
       success
     headers:
-      - contentType: plaintext
-      - server: ubuntu 16.04
+      Content-Type: plaintext
+      Custom-Server-Header: ubuntu 16.04
+
+- route: /whatever
+  response:
+    status: 404
+    body: |
+      <xml>asdsadasdasd</xml>
+    headers:
+      Ashwath: Hi
